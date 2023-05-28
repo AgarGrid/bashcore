@@ -5,6 +5,12 @@ unmountFolder(){
     echo $LOCAL_ROOT_PASS | sudo -S umount -f $targetMountFile
 }
 
+
+currentScriptName(){
+    local me=`basename "$0"`
+    echo $me
+}
+
 mountFolder(){
     log "Mounting folder"
 
@@ -47,13 +53,18 @@ log_error(){
 }
 
 log_to_file(){
-    echo "not implemented"
-    ##echo "$@" >> $LOG_FILE_LOCATION
+
+    if [ ! -z "$LOG_FILE_LOCATION" ]
+    then
+        echo "$@" >> $LOG_FILE_LOCATION
+    fi
 }
 
 clear_log_file(){
-    echo "not implemented"
-    ##echo "" > $LOG_FILE_LOCATION
+    if [ ! -z "$LOG_FILE_LOCATION" ]
+    then
+        echo "" > $LOG_FILE_LOCATION
+    fi  
 }
 
 getHostName(){
@@ -62,6 +73,15 @@ getHostName(){
 
 doesDirExists(){
     if [ -d $@ ] 
+    then
+        echo "true" 
+    else
+        echo "false"
+    fi
+}
+
+doesFileExists(){
+    if [ -f $@ ] 
     then
         echo "true" 
     else
@@ -93,6 +113,20 @@ createDirIfNotExcist(){
         log 'Creating folder '$1
         mkdir -p $1
     fi
+}
+
+gotToProjectRoot(){
+    cd $PROJECT_ROOT_LOCATION
+}
+
+gotToWorkspaceRoot(){
+    gotToProjectRoot
+    cd $WORKSPACE_DIR
+}
+
+remakeFolder(){
+    rm -rf $1
+    mkdir $1
 }
 
 
